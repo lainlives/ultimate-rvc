@@ -126,7 +126,7 @@ class GenerationConfig(BaseTabConfig):
             " Decrease to potentially reduce artifacts coming from the voice"
             " model.<br><br><br>"
         ),
-        value=0.3,
+        value=0.0,
         minimum=0.0,
         maximum=1.0,
     )
@@ -136,7 +136,7 @@ class GenerationConfig(BaseTabConfig):
             "How much to mimic the loudness (0) of the input voice or a fixed loudness"
             " (1). A value of 1 is recommended for most cases.<br><br>"
         ),
-        value=1.0,
+        value=0.0,
         minimum=0.0,
         maximum=1.0,
     )
@@ -147,7 +147,7 @@ class GenerationConfig(BaseTabConfig):
             " from artifacts. A higher value offers more protection but may worsen the"
             " indexing effect.<br><br>"
         ),
-        value=0.33,
+        value=0.0,
         minimum=0.0,
         maximum=0.5,
     )
@@ -158,7 +158,7 @@ class GenerationConfig(BaseTabConfig):
             "Whether to split the input voice track into smaller segments before"
             " converting it. This can improve output quality for longer voice tracks."
         ),
-        value=False,
+        value=True,
     )
     autotune_voice: CheckboxConfig = CheckboxConfig(
         label="Autotune converted voice",
@@ -183,7 +183,7 @@ class GenerationConfig(BaseTabConfig):
             "Whether to adjust the pitch of the converted voice so that it matches the"
             " range of the voice model used."
         ),
-        value=False,
+        value=True,
         exclude_value=True,
     )
     proposed_pitch_threshold: SliderConfig = SliderConfig(
@@ -738,9 +738,9 @@ class TrainingConfig(BaseTabConfig):
             "The number of samples in each training batch. It is advisable to align"
             " this value with the available VRAM of your GPU."
         ),
-        value=8,
+        value=64,
         minimum=1,
-        maximum=64,
+        maximum=512,
         step=1,
     )
     detect_overtraining: CheckboxConfig = CheckboxConfig(
@@ -761,7 +761,7 @@ class TrainingConfig(BaseTabConfig):
         ),
         value=50,
         minimum=1,
-        maximum=100,
+        maximum=1000,
         visible=False,
         step=1,
     )
@@ -822,7 +822,7 @@ class TrainingConfig(BaseTabConfig):
             "Whether to save a unique checkpoint at each save interval. If not enabled,"
             " only the latest checkpoint will be saved at each interval."
         ),
-        value=False,
+        value=True,
     )
     save_all_weights: CheckboxConfig = CheckboxConfig(
         label="Save all weights",
@@ -830,7 +830,7 @@ class TrainingConfig(BaseTabConfig):
             "Whether to save unique voice model weights at each save interval. If not"
             " enabled, only the best voice model weights will be saved."
         ),
-        value=False,
+        value=True,
     )
     clear_saved_data: CheckboxConfig = CheckboxConfig(
         label="Clear saved data",
@@ -865,7 +865,7 @@ class TrainingConfig(BaseTabConfig):
             "The precision type to use when training the voice model. FP16 and BF16 can"
             " reduce VRAM usage and speed up training on supported hardware."
         ),
-        value=PrecisionType.FP32,
+        value=PrecisionType.BF16,
         choices=list(PrecisionType),
     )
     preload_dataset: CheckboxConfig = CheckboxConfig(
@@ -874,7 +874,7 @@ class TrainingConfig(BaseTabConfig):
             "Whether to preload all training data into GPU memory. This can improve"
             " training speed but requires a lot of VRAM.<br><br>"
         ),
-        value=False,
+        value=True,
     )
     reduce_memory_usage: CheckboxConfig = CheckboxConfig(
         label="Reduce memory usage",
