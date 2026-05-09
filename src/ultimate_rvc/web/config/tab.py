@@ -660,7 +660,7 @@ class TrainingConfig(BaseTabConfig):
         info="Length of split audio chunks.",
         value=3.0,
         minimum=0.5,
-        maximum=5.0,
+        maximum=15.0,
         step=0.1,
         visible=False,
     )
