@@ -6,19 +6,15 @@ import sys
 import unicodedata
 import warnings
 
-import soxr
-
-import wget
-
+import librosa
 import numpy as np
-
+import soundfile as sf
+import soxr
 from torch import nn
 from transformers import HubertModel
-
-import librosa
-import soundfile as sf
-
 from ultimate_rvc.common import RVC_MODELS_DIR
+
+import wget
 
 # Remove this to see warnings about transformers models
 warnings.filterwarnings("ignore")
@@ -122,9 +118,7 @@ def load_embedding(embedder_model, custom_embedder=None):
         "contentvec": os.path.join(embedder_root, "contentvec"),
         "spin": os.path.join(embedder_root, "spin"),
         "spin-v2": os.path.join(embedder_root, "spin-v2"),
-        "chinese-hubert-base": os.path.join(embedder_root, "chinese_hubert_base"),
-        "japanese-hubert-base": os.path.join(embedder_root, "japanese_hubert_base"),
-        "korean-hubert-base": os.path.join(embedder_root, "korean_hubert_base"),
+        "wavlm-plus-ft": os.path.join(embedder_root, "wavlm-plus-ft"),
     }
 
     online_embedders = {
@@ -137,14 +131,8 @@ def load_embedding(embedder_model, custom_embedder=None):
         "spin-v2": (
             "https://huggingface.co/JackismyShephard/ultimate-rvc/resolve/main/Resources/embedders/spin-v2/pytorch_model.bin"
         ),
-        "chinese-hubert-base": (
-            "https://huggingface.co/JackismyShephard/ultimate-rvc/resolve/main/Resources/embedders/chinese_hubert_base/pytorch_model.bin"
-        ),
-        "japanese-hubert-base": (
-            "https://huggingface.co/JackismyShephard/ultimate-rvc/resolve/main/Resources/embedders/japanese_hubert_base/pytorch_model.bin"
-        ),
-        "korean-hubert-base": (
-            "https://huggingface.co/JackismyShephard/ultimate-rvc/resolve/main/Resources/embedders/korean_hubert_base/pytorch_model.bin"
+        "wavlm-plus-ft": (
+            "https://huggingface.co/lainlives/voice/resolve/main/rvc/embedders/custom/wavlm-plus-ft/pytorch_model.bin"
         ),
     }
 
@@ -158,14 +146,8 @@ def load_embedding(embedder_model, custom_embedder=None):
         "spin-v2": (
             "https://huggingface.co/JackismyShephard/ultimate-rvc/resolve/main/Resources/embedders/spin-v2/config.json"
         ),
-        "chinese-hubert-base": (
-            "https://huggingface.co/JackismyShephard/ultimate-rvc/resolve/main/Resources/embedders/chinese_hubert_base/config.json"
-        ),
-        "japanese-hubert-base": (
-            "https://huggingface.co/JackismyShephard/ultimate-rvc/resolve/main/Resources/embedders/japanese_hubert_base/config.json"
-        ),
-        "korean-hubert-base": (
-            "https://huggingface.co/JackismyShephard/ultimate-rvc/resolve/main/Resources/embedders/korean_hubert_base/config.json"
+        "wavlm-plus-ft": (
+            "https://huggingface.co/lainlives/voice/resolve/main/rvc/embedders/custom/wavlm-plus-ft/config.json"
         ),
     }
 

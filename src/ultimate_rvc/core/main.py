@@ -5,14 +5,11 @@ RVC project.
 
 from __future__ import annotations
 
+from pathlib import Path
 from typing import TYPE_CHECKING
 
 import lazy_loader as lazy
-
-from pathlib import Path
-
 from rich import print as rprint
-
 from ultimate_rvc.common import VOICE_MODELS_DIR
 from ultimate_rvc.core.common import FLAG_FILE
 from ultimate_rvc.core.generate.song_cover import initialize_audio_separator
@@ -32,14 +29,9 @@ def download_sample_models() -> None:
     """Download sample RVC models."""
     named_model_links = [
         (
-            "https://huggingface.co/damnedraxx/TaylorSwift/resolve/main/TaylorSwift.zip",
-            "Taylor Swift",
+            "https://huggingface.co/sxndypz/rvc-v2-models/resolve/main/marimari.zip",
+            "marimari_en - chewy",
         ),
-        (
-            "https://huggingface.co/Vermiculos/balladjames/resolve/main/Ballad%20James.zip?download=true",
-            "James Hetfield",
-        ),
-        ("https://huggingface.co/ryolez/MMLP/resolve/main/MMLP.zip", "Eminem"),
     ]
     for model_url, model_name in named_model_links:
         if not Path(VOICE_MODELS_DIR / model_name).is_dir():

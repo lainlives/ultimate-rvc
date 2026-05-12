@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from pydantic import BaseModel
-
 from ultimate_rvc.typing_extra import (
     AudioExt,
     AudioNormalizationMode,
@@ -183,7 +182,7 @@ class GenerationConfig(BaseTabConfig):
             "Whether to adjust the pitch of the converted voice so that it matches the"
             " range of the voice model used."
         ),
-        value=True,
+        value=False,
         exclude_value=True,
     )
     proposed_pitch_threshold: SliderConfig = SliderConfig(
@@ -702,7 +701,7 @@ class TrainingConfig(BaseTabConfig):
             " silence in inferred audio files. If the preprocessed audio dataset"
             " already contains segments of pure silence, set this to 0."
         ),
-        value=2,
+        value=0,
         minimum=0,
         maximum=10,
         step=1,
@@ -729,7 +728,7 @@ class TrainingConfig(BaseTabConfig):
         ),
         value=500,
         minimum=1,
-        maximum=1000,
+        maximum=10000,
         step=1,
     )
     batch_size: SliderConfig = SliderConfig(
@@ -738,7 +737,7 @@ class TrainingConfig(BaseTabConfig):
             "The number of samples in each training batch. It is advisable to align"
             " this value with the available VRAM of your GPU."
         ),
-        value=64,
+        value=24,
         minimum=1,
         maximum=512,
         step=1,
@@ -874,7 +873,7 @@ class TrainingConfig(BaseTabConfig):
             "Whether to preload all training data into GPU memory. This can improve"
             " training speed but requires a lot of VRAM.<br><br>"
         ),
-        value=True,
+        value=False,
     )
     reduce_memory_usage: CheckboxConfig = CheckboxConfig(
         label="Reduce memory usage",
@@ -884,5 +883,5 @@ class TrainingConfig(BaseTabConfig):
             " memory (e.g., <6GB VRAM) or when training with a batch size larger than"
             " what your GPU can normally accommodate."
         ),
-        value=False,
+        value=True,
     )
