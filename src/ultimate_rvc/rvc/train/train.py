@@ -12,14 +12,13 @@ from random import randint, shuffle
 from time import time as ttime
 
 import numpy as np
-from tqdm import tqdm
-
 import torch
 import torch.distributed as dist
 import torch.multiprocessing as mp
 from torch.nn.parallel import DistributedDataParallel as DDP
 from torch.utils.data import DataLoader
 from torch.utils.tensorboard import SummaryWriter
+from tqdm import tqdm
 
 now_dir = pathlib.Path.cwd()
 sys.path.append(os.path.join(str(now_dir)))
@@ -29,35 +28,27 @@ import ultimate_rvc.rvc.lib.zluda
 from ultimate_rvc.common import TRAINING_MODELS_DIR
 from ultimate_rvc.rvc.common import RVC_TRAINING_MODELS_DIR
 from ultimate_rvc.rvc.lib.algorithm import commons
-from ultimate_rvc.rvc.train.losses import (
-    discriminator_loss,
-    feature_loss,
-    generator_loss,
-    kl_loss,
-)
+from ultimate_rvc.rvc.train.losses import (discriminator_loss, feature_loss,
+                                           generator_loss, kl_loss)
 from ultimate_rvc.rvc.train.mel_processing import (
-    MultiScaleMelSpectrogramLoss,
-    mel_spectrogram_torch,
-    spec_to_mel_torch,
-)
+    MultiScaleMelSpectrogramLoss, mel_spectrogram_torch, spec_to_mel_torch)
 from ultimate_rvc.rvc.train.process.extract_model import extract_model
-from ultimate_rvc.rvc.train.utils import (
-    HParams,
-    latest_checkpoint_path,
-    load_checkpoint,
-    load_wav_to_torch,
-    plot_spectrogram_to_numpy,
-    remove_sox_libmso6_from_ld_preload,
-    save_checkpoint,
-    summarize,
-)
+from ultimate_rvc.rvc.train.utils import (HParams, latest_checkpoint_path,
+                                          load_checkpoint, load_wav_to_torch,
+                                          plot_spectrogram_to_numpy,
+                                          remove_sox_libmso6_from_ld_preload,
+                                          save_checkpoint, summarize)
 
 logging.getLogger("torch").setLevel(logging.ERROR)
 logger = logging.getLogger(__name__)
 
+torch.set_float32_matmul_precision("medium")
+torch.backends.cuda.matmul.allow_bf16_reduced_precision_reduction = True
 torch.backends.cudnn.deterministic = False
-torch.backends.cudnn.benchmark = True
+# torch.backends.cudnn.benchmark = True
+
 torch.multiprocessing.set_start_method("spawn", force=True)
+
 os.environ["USE_LIBUV"] = "0" if sys.platform == "win32" else "1"
 
 randomized = True
@@ -335,11 +326,9 @@ def run(
         torch.cuda.set_device(device_id)
 
     # Create datasets and dataloaders
-    from ultimate_rvc.rvc.train.data_utils import (
-        DistributedBucketSampler,
-        TextAudioCollateMultiNSFsid,
-        TextAudioLoaderMultiNSFsid,
-    )
+    from ultimate_rvc.rvc.train.data_utils import (DistributedBucketSampler,
+                                                   TextAudioCollateMultiNSFsid,
+                                                   TextAudioLoaderMultiNSFsid)
 
     train_dataset = TextAudioLoaderMultiNSFsid(config.data)
     collate_fn = TextAudioCollateMultiNSFsid()
@@ -354,13 +343,13 @@ def run(
 
     train_loader = DataLoader(
         train_dataset,
-        num_workers=4,
+        num_workers=8,
         shuffle=False,
         pin_memory=True,
         collate_fn=collate_fn,
         batch_sampler=train_sampler,
         persistent_workers=True,
-        prefetch_factor=8,
+        prefetch_factor=16,
     )
     if len(train_loader) < 3:
         logger.error(
@@ -401,7 +390,8 @@ def run(
     config.model.spk_embed_dim = spk_dim
 
     # Initialize models and optimizers
-    from ultimate_rvc.rvc.lib.algorithm.discriminators import MultiPeriodDiscriminator
+    from ultimate_rvc.rvc.lib.algorithm.discriminators import \
+        MultiPeriodDiscriminator
     from ultimate_rvc.rvc.lib.algorithm.synthesizers import Synthesizer
 
     # NOTE checkingpointing here means whether or not activations are
@@ -438,9 +428,10 @@ def run(
         net_g = net_g.to(device)
         net_d = net_d.to(device)
 
-    if bf16_adamw and train_dtype == torch.bfloat16:
+    if bf16_adamw:  # and train_dtype == torch.bfloat16:
         logger.info("Using BFloat16 AdamW optimizer")
-        from ultimate_rvc.rvc.train.anyprecision_optimizer import AnyPrecisionAdamW
+        from ultimate_rvc.rvc.train.anyprecision_optimizer import \
+            AnyPrecisionAdamW
 
         optimizer = AnyPrecisionAdamW
     else:

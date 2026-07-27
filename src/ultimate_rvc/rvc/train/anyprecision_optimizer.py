@@ -94,11 +94,11 @@ class AnyPrecisionAdamW(Optimizer):
             lr = group["lr"]
             weight_decay = group["weight_decay"]
             eps = group["eps"]
-            use_kahan_summation = group["use_kahan_summation"]
+            use_kahan_summation = group.get("use_kahan_summation", False)
 
-            momentum_dtype = group["momentum_dtype"]
-            variance_dtype = group["variance_dtype"]
-            compensation_buffer_dtype = group["compensation_buffer_dtype"]
+            momentum_dtype = group.get("momentum_dtype", torch.float16)
+            variance_dtype = group.get("variance_dtype", torch.float16)
+            compensation_buffer_dtype = group.get("compensation_buffer_dtype", torch.float16)
 
             for p in group["params"]:
                 if p.grad is None:

@@ -7,8 +7,9 @@ name = "ultimate-rvc"
 version = "0.6.0"
 description = "Ultimate RVC"
 readme = "README.md"
-requires-python = ">=3.12,<3.14"
+requires-python = ">=3.12,<3.15"
 dependencies = [
+  "setuptools==80.9.0",
   #Validation
   "pydantic==2.11.7",
   "lazy-loader==0.4.0",
@@ -33,31 +34,28 @@ dependencies = [
   # Machine learning
   "torchcrepe==0.0.24",
   "faiss-cpu==1.13.1",
-  # Version of onnxruntime-gpu needs to align with what 
-  # version audio-separator package uses.
-  "onnxruntime-gpu==1.23.2",
   "local-attention==1.11.2",
-  "einops==0.8.1",
-  "transformers==4.57.3",
-  "torchfcpe==0.0.4",
-  "tensorboardX==2.6.4",
-  "tensorboard==2.20.0",
-  "torch-tb-profiler==0.4.3",
+  "einops~=0.8.1",
+  "transformers~=5.14.1",
+  "torchfcpe~=0.0.4",
+  "tensorboardX~=2.6.4",
+  "tensorboard~=2.20.0",
+  "torch-tb-profiler>=0.4.3",
 
   # Audio
-  "static-ffmpeg==2.13",
-  "static-sox==1.0.2",
-  "typed-ffmpeg==3.8.1",
-  "soundfile==0.13.1",
-  "librosa==0.11.0",
-  "sox==1.5.0",
-  "soxr==1.0.0",
-  "pydub==0.25.1",
-  "pydub-stubs==0.25.1.6",
-  "pedalboard==0.9.19",
-  "audio-separator[gpu]==0.40.0",
-  "noisereduce==3.0.3",
-  "edge-tts==7.2.7",
+  "static-ffmpeg>=2.13",
+  "static-sox>=1.0.2",
+  "typed-ffmpeg>=3.8.1",
+  "soundfile>=0.13.1",
+  "librosa~=0.11.0",
+  "sox~=1.5.0",
+  "soxr~=1.0.0",
+  "pydub~=0.25.1",
+  "pydub-stubs~=0.25.1.6",
+  "pedalboard>=0.9.19",
+  "audio-separator[gpu]>=0.44.3",
+  "noisereduce~=3.0.3",
+  "edge-tts>=7.2.7",
   # TODO potentially add these later
   # below package outcommented until we use dio,pm and harvest
   #"pyworld-fixed==0.3.8",
@@ -79,11 +77,12 @@ dev = [
 ]
 
 [project.optional-dependencies]
-cuda = ["torch==2.7.1+cu128", "torchaudio==2.7.1+cu128"]
+cuda = ["torch==2.10.0+cu130", "torchaudio==2.10.0+cu130"]
 rocm = [
-  "torch==2.6.0+rocm6.2.4 ; sys_platform == 'linux'",
-  "torchaudio==2.6.0+rocm6.2.4 ; sys_platform == 'linux'",
-  "pytorch-triton-rocm==3.2.0 ; sys_platform == 'linux'",
+  "torch==2.13.0a0+rocm7.14.0a20260611 ; sys_platform == 'linux'",
+  "torchaudio==2.11.0a0+rocm7.14.0a20260611 ; sys_platform == 'linux'",
+  "triton==3.7.1rocm7.14.0a20260611 ; sys_platform == 'linux'",
+  "rocm==7.14.0a20260611 ; sys_platform == 'linux'",
 ]
 
 [project.scripts]
@@ -96,26 +95,43 @@ cache-dir = "./uv/cache"
 compile-bytecode = true
 conflicts = [[{ extra = "cuda" }, { extra = "rocm" }]]
 
+[dependency-groups]
+cuda = [
+    { name = "torch", version = "2.10.0+cu130" },
+    { name = "torchaudio", version = "2.10.0+cu130" },
+]
+rocm = [
+    { name = "torch", version = "2.13.0a0+rocm7.14.0a20260611" },
+    { name = "torchaudio", version = "2.11.0a0+rocm7.14.0a20260611" },
+    { name = "triton", version = "3.7.1rocm7.14.0a20260611" },
+    { name = "rocm", version = "7.14.0a20260611" },
+]
+
+
+
+
+
+
 [tool.uv.sources]
 torch = [
   { index = "torch-rocm", extra = "rocm" },
-  { index = "torch-cu128", extra = "cuda" },
+  { index = "torch-cu130", extra = "cuda" },
 ]
 torchaudio = [
   { index = "torch-rocm", extra = "rocm" },
-  { index = "torch-cu128", extra = "cuda" },
+  { index = "torch-cu130", extra = "cuda" },
 ]
 pytorch-triton-rocm = [{ index = "torch-rocm", extra = "rocm" }]
 
 [[tool.uv.index]]
 name = "torch-cu128"
-url = "https://download.pytorch.org/whl/cu128"
+url = "https://download.pytorch.org/whl/cu130"
 explicit = true
 
 [[tool.uv.index]]
 name = "torch-rocm"
-url = "https://download.pytorch.org/whl/rocm6.2.4"
-explicit = true
+url = "https://rocm.nightlies.amd.com/v2-staging/gfx120X-all"
+explicit = false
 
 [tool.pyright]
 stubPath = "src/ultimate_rvc/stubs"
@@ -128,12 +144,12 @@ venvPath = "."
 venv = "uv/.venv"
 
 [tool.black]
-target-version = ['py312', 'py313']
+target-version = ['py313']
 preview = true
 enable-unstable-feature = ["string_processing"]
 
 [tool.ruff]
-target-version = "py312"
+target-version = "py313"
 fix = true
 required-version = ">=0.5.7"
 
