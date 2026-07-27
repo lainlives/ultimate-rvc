@@ -1,5 +1,4 @@
 import numpy as np
-
 import torch
 import torchaudio
 from torch import nn
@@ -7,7 +6,6 @@ from torch.nn import functional as F
 from torch.nn.utils import remove_weight_norm
 from torch.nn.utils.parametrizations import weight_norm
 from torch.utils.checkpoint import checkpoint
-
 from ultimate_rvc.rvc.lib.algorithm.commons import get_padding, init_weights
 
 
@@ -186,7 +184,6 @@ class SineGenerator(nn.Module):
     Definition of sine generator
 
     Generates sine waveforms with optional harmonics and additive noise.
-    Can be used to create harmonic noise source for neural vocoders.
 
     Args:
         samp_rate (int): Sampling rate in Hz.

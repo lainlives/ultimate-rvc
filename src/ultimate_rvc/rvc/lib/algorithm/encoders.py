@@ -2,7 +2,6 @@ import logging
 import math
 
 import torch
-
 from ultimate_rvc.rvc.lib.algorithm.attentions import FFN, MultiHeadAttention
 from ultimate_rvc.rvc.lib.algorithm.commons import sequence_mask
 from ultimate_rvc.rvc.lib.algorithm.modules import WaveNet
@@ -50,6 +49,7 @@ class Encoder(torch.nn.Module):
                     n_heads,
                     p_dropout=p_dropout,
                     window_size=window_size,
+                    # heads_share=False,
                 )
                 for _ in range(n_layers)
             ],

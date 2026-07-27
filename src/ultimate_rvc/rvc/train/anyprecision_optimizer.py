@@ -24,10 +24,10 @@ class AnyPrecisionAdamW(Optimizer):
         betas=(0.9, 0.999),
         eps=1e-8,
         weight_decay=0.0,
-        use_kahan_summation=True,  # NOTE default upstream is True
-        momentum_dtype=torch.bfloat16,  # NOTE default upstream is torch.float32,
+        use_kahan_summation=False,  # NOTE default upstream is True
+        momentum_dtype=torch.float32,  # NOTE default upstream is torch.float32,
         variance_dtype=torch.bfloat16,
-        compensation_buffer_dtype=torch.bfloat16,
+        compensation_buffer_dtype=torch.float32,
     ):
         """
         Args:
@@ -94,11 +94,13 @@ class AnyPrecisionAdamW(Optimizer):
             lr = group["lr"]
             weight_decay = group["weight_decay"]
             eps = group["eps"]
-            use_kahan_summation = group.get("use_kahan_summation", False)
+            use_kahan_summation = group.get("use_kahan_summation", True)
 
-            momentum_dtype = group.get("momentum_dtype", torch.float16)
-            variance_dtype = group.get("variance_dtype", torch.float16)
-            compensation_buffer_dtype = group.get("compensation_buffer_dtype", torch.float16)
+            momentum_dtype = group.get("momentum_dtype", torch.bfloat16)
+            variance_dtype = group.get("variance_dtype", torch.bfloat16)
+            compensation_buffer_dtype = group.get(
+                "compensation_buffer_dtype", torch.bfloat16
+            )
 
             for p in group["params"]:
                 if p.grad is None:
@@ -170,7 +172,7 @@ class AnyPrecisionAdamW(Optimizer):
 
                 # lr update to compensation
                 if use_kahan_summation:
-                    compensation = state["compensation"]
+                    compensation = state.get("compensation", torch.zeros_like(p.data))
 
                     compensation.addcdiv_(exp_avg, centered_variance, value=-step_size)
 

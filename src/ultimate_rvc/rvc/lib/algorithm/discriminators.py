@@ -2,7 +2,6 @@ import torch
 import torch.nn.functional as F
 from torch.nn.utils.parametrizations import spectral_norm, weight_norm
 from torch.utils.checkpoint import checkpoint
-
 from ultimate_rvc.rvc.lib.algorithm.commons import get_padding
 from ultimate_rvc.rvc.lib.algorithm.residuals import LRELU_SLOPE
 
@@ -26,7 +25,7 @@ class MultiPeriodDiscriminator(torch.nn.Module):
         self,
         use_spectral_norm: bool = False,
         checkpointing: bool = False,
-        version: str = "v2",
+        version: str = "v3",
     ):
         super().__init__()
 

@@ -9,44 +9,33 @@ modules.
 
 from __future__ import annotations
 
+import os
 from typing import Annotated
 
-import os
-
 import gradio as gr
-
 import typer
-
 from ultimate_rvc.common import AUDIO_DIR, MODELS_DIR, TEMP_DIR
 from ultimate_rvc.core.generate.song_cover import get_named_song_dirs
 from ultimate_rvc.core.generate.speech import get_edge_tts_voice_names
-from ultimate_rvc.core.manage.audio import (
-    get_audio_datasets,
-    get_named_audio_datasets,
-    get_saved_output_audio,
-    get_saved_speech_audio,
-)
+from ultimate_rvc.core.manage.audio import (get_audio_datasets,
+                                            get_named_audio_datasets,
+                                            get_saved_output_audio,
+                                            get_saved_speech_audio)
 from ultimate_rvc.core.manage.config import get_config_names, load_config
-from ultimate_rvc.core.manage.models import (
-    get_custom_embedder_model_names,
-    get_custom_pretrained_model_names,
-    get_training_model_names,
-    get_voice_model_names,
-)
+from ultimate_rvc.core.manage.models import (get_custom_embedder_model_names,
+                                             get_custom_pretrained_model_names,
+                                             get_training_model_names,
+                                             get_voice_model_names)
 from ultimate_rvc.web.common import initialize_dropdowns
 from ultimate_rvc.web.config.main import TotalConfig
-from ultimate_rvc.web.tabs.generate.song_cover.multi_step_generation import (
-    render as render_song_cover_multi_step_tab,
-)
-from ultimate_rvc.web.tabs.generate.song_cover.one_click_generation import (
-    render as render_song_cover_one_click_tab,
-)
-from ultimate_rvc.web.tabs.generate.speech.multi_step_generation import (
-    render as render_speech_multi_step_tab,
-)
-from ultimate_rvc.web.tabs.generate.speech.one_click_generation import (
-    render as render_speech_one_click_tab,
-)
+from ultimate_rvc.web.tabs.generate.song_cover.multi_step_generation import \
+    render as render_song_cover_multi_step_tab
+from ultimate_rvc.web.tabs.generate.song_cover.one_click_generation import \
+    render as render_song_cover_one_click_tab
+from ultimate_rvc.web.tabs.generate.speech.multi_step_generation import \
+    render as render_speech_multi_step_tab
+from ultimate_rvc.web.tabs.generate.speech.one_click_generation import \
+    render as render_speech_one_click_tab
 from ultimate_rvc.web.tabs.manage.audio import render as render_audio_tab
 from ultimate_rvc.web.tabs.manage.models import render as render_models_tab
 from ultimate_rvc.web.tabs.manage.settings import render as render_settings_tab
@@ -79,11 +68,11 @@ def render_app() -> gr.Blocks:
 
     with gr.Blocks(
         title="Ultimate RVC",
-        theme="JackismyShephard/ultimate-rvc-theme",
+        theme="lainlives/blurple",
         css=css,
         delete_cache=(cache_delete_frequency, cache_delete_cutoff),
     ) as app:
-        gr.HTML("<h1>Ultimate RVC 💙</h1>")
+        gr.HTML("<h1>Ultimate RVC</h1>")
         for component_config in [
             total_config.song.one_click.voice_model,
             total_config.song.one_click.cached_song,
