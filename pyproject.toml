@@ -66,12 +66,7 @@ dependencies = [
 
 [project.optional-dependencies]
 cuda = ["torch==2.10.0+cu130", "torchaudio==2.10.0+cu130"]
-rocm = [
-  "torch==2.13.0a0+rocm7.14.0a20260611 ; sys_platform == 'linux'",
-  "torchaudio==2.11.0a0+rocm7.14.0a20260611 ; sys_platform == 'linux'",
-  "triton==3.7.1rocm7.14.0a20260611 ; sys_platform == 'linux'",
-  "rocm==7.14.0a20260611 ; sys_platform == 'linux'",
-]
+
 
 [project.scripts]
 urvc = "ultimate_rvc.cli.main:app"
