@@ -10,10 +10,10 @@
             0.99
         ],
         "eps": 1e-09,
-        "lr_decay": 0.999999,
+        "lr_decay": 0.9995,
         "segment_size": 17280,
         "c_mel": 35,
-        "c_kl": 0.8,
+        "c_kl": 1.0,
         "grad_clip": 1.0,
         "use_kahan_summation": false,
         "momentum_dtype": "torch.float32",
@@ -33,7 +33,7 @@
     "model": {
         "inter_channels": 512,
         "hidden_channels": 512,
-        "filter_channels": 1280,
+        "filter_channels": 2048,
         "text_enc_hidden_dim": 768,
         "n_heads": 4,
         "n_layers": 8,
@@ -72,14 +72,14 @@
             2,
             2
         ],
-        "upsample_initial_channel": 768,
+        "upsample_initial_channel": 1024,
         "upsample_kernel_sizes": [
             24,
             20,
             4,
             4
         ],
-        "use_spectral_norm": false,
+        "use_spectral_norm": true,
         "gin_channels": 256,
         "spk_embed_dim": 109
     }
