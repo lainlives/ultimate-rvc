@@ -4,7 +4,7 @@
     "train": {
         "log_interval": 10,
         "seed": 6767,
-        "learning_rate": 0.000001,
+        "learning_rate": 0.0000001,
         "betas": [
             0.8,
             0.99
