@@ -1,10 +1,9 @@
 
 import os
 
-# Set the number of OpenBLAS threads (e.g., to 1 to prevent over-subscription)
-os.environ["OPENBLAS_NUM_THREADS"] = "2"
 
-# Fallback variables in case OpenBLAS was compiled with OpenMP or alternative bindings
+
+os.environ["OPENBLAS_NUM_THREADS"] = "2"
 os.environ["OMP_NUM_THREADS"] = "2"
 os.environ["MKL_NUM_THREADS"] = "2"
 import datetime
@@ -21,8 +20,16 @@ from time import time as ttime
 
 import numpy as np
 import torch
+torch.set_float32_matmul_precision("high")
+torch.backends.cuda.matmul.allow_bf16_reduced_precision_reduction = True
+torch.backends.cudnn.deterministic = False
+torch.backends.cudnn.benchmark = True
+
+
+
 import torch.distributed as dist
 import torch.multiprocessing as mp
+torch.multiprocessing.set_start_method("spawn", force=True)
 from torch.nn.parallel import DistributedDataParallel as DDP
 from torch.utils.data import DataLoader
 from torch.utils.tensorboard import SummaryWriter
@@ -50,12 +57,6 @@ from ultimate_rvc.rvc.train.utils import (HParams, latest_checkpoint_path,
 logging.getLogger("torch").setLevel(logging.ERROR)
 logger = logging.getLogger(__name__)
 
-torch.set_float32_matmul_precision("highest")
-torch.backends.cuda.matmul.allow_bf16_reduced_precision_reduction = False
-torch.backends.cudnn.deterministic = False
-# torch.backends.cudnn.benchmark = True
-
-torch.multiprocessing.set_start_method("spawn", force=True)
 
 os.environ["USE_LIBUV"] = "0" if sys.platform == "win32" else "1"
 
