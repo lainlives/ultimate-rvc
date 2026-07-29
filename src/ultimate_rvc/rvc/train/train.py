@@ -687,16 +687,16 @@ def train_and_evaluate(
     train_dtype,
 ) -> None:
     """Train and evaluates the model for one epoch."""
-    global global_step, lowest_g_value, lowest_d_value, consecutive_increases_gen, consecutive_increases_disc, d_lr_coeff
+    global global_step, lowest_g_value, lowest_d_value, consecutive_increases_gen, consecutive_increases_disc #, d_lr_coeff
 
-    if lowest_d_value < 0.2 and lowest_g_value > 3.0:
-      d_lr_coeff = 0.0001
-    
-    if lowest_d_value < 0.1 and lowest_g_value > 1.0:
-      d_lr_coeff = 0.00001
-      
-    if lowest_d_value < 1 and lowest_g_value < 1.0:
-      d_lr_coeff = 0.001
+#    if lowest_d_value < 0.2 and lowest_g_value > 3.0:
+#      d_lr_coeff = 0.0001
+#    
+#    if lowest_d_value < 0.1 and lowest_g_value > 1.0:
+#      d_lr_coeff = 0.00001
+#      
+#    if lowest_d_value < 1 and lowest_g_value < 1.0:
+#      d_lr_coeff = 0.001
       
     model_add = []
     checkpoint_idxs = []
