@@ -1,8 +1,16 @@
+
+import os
+
+# Set the number of OpenBLAS threads (e.g., to 1 to prevent over-subscription)
+os.environ["OPENBLAS_NUM_THREADS"] = "2"
+
+# Fallback variables in case OpenBLAS was compiled with OpenMP or alternative bindings
+os.environ["OMP_NUM_THREADS"] = "2"
+os.environ["MKL_NUM_THREADS"] = "2"
 import datetime
 import glob
 import json
 import logging
-import os
 import pathlib
 import shutil
 import signal
@@ -54,7 +62,7 @@ os.environ["USE_LIBUV"] = "0" if sys.platform == "win32" else "1"
 randomized = True
 d_lr_coeff = 0.002
 g_lr_coeff = 1.0
-d_step_per_g_step = 4
+d_step_per_g_step = 2
 bf16_adamw = True
 global_step = 0
 lowest_g_value = {"value": float("inf"), "epoch": 0}
@@ -1459,13 +1467,13 @@ def run(
 
     train_loader = DataLoader(
         train_dataset,
-        num_workers=16,
+        num_workers=2,
         shuffle=False,
         pin_memory=True,
         collate_fn=collate_fn,
         batch_sampler=train_sampler,
         persistent_workers=True,
-        prefetch_factor=16,
+        prefetch_factor=4,
     )
     if len(train_loader) < 3:
         logger.error(
