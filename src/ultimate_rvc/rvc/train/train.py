@@ -52,9 +52,9 @@ torch.multiprocessing.set_start_method("spawn", force=True)
 os.environ["USE_LIBUV"] = "0" if sys.platform == "win32" else "1"
 
 randomized = True
-d_lr_coeff = 0.001
+d_lr_coeff = 0.002
 g_lr_coeff = 1.0
-d_step_per_g_step = 1
+d_step_per_g_step = 4
 bf16_adamw = True
 global_step = 0
 lowest_g_value = {"value": float("inf"), "epoch": 0}
